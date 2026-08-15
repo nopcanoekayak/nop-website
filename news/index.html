@@ -43,7 +43,9 @@
   <nav class="nav" aria-label="Κύρια πλοήγηση">
 
     <a href="/">Αρχική</a>
+
     <a href="/club">Ο Όμιλος</a>
+
     <a href="/canoe-kayak">Κανόε Καγιάκ</a>
 
     <a href="/sup">
@@ -51,7 +53,9 @@
     </a>
 
     <a href="/coach">Προπονητής</a>
+
     <a href="/results">Αποτελέσματα</a>
+
     <a href="/news/">Νέα</a>
 
     <a
@@ -392,6 +396,7 @@
         year: "numeric"
       }
     );
+
   }
 
 
@@ -407,6 +412,7 @@
         String(slug || "")
       )
     );
+
   }
 
 
@@ -439,7 +445,9 @@
     }
 
 
-    /* IMAGES */
+    /* =================================================
+       IMAGES
+       ================================================= */
 
     text =
       text.replace(
@@ -474,7 +482,6 @@
 
 
           let imageHtml =
-
             '<figure class="news-body-image">' +
 
             '<img' +
@@ -507,10 +514,13 @@
           );
 
         }
+
       );
 
 
-    /* LINKS */
+    /* =================================================
+       LINKS
+       ================================================= */
 
     text =
       text.replace(
@@ -548,16 +558,21 @@
           );
 
         }
+
       );
 
 
-    /* ESCAPE REMAINING TEXT */
+    /* =================================================
+       ESCAPE ALL NORMAL TEXT
+       ================================================= */
 
     text =
       escapeHtml(text);
 
 
-    /* BOLD */
+    /* =================================================
+       BOLD
+       ================================================= */
 
     text =
       text.replace(
@@ -566,7 +581,9 @@
       );
 
 
-    /* ITALIC */
+    /* =================================================
+       ITALIC
+       ================================================= */
 
     text =
       text.replace(
@@ -575,7 +592,9 @@
       );
 
 
-    /* HEADINGS */
+    /* =================================================
+       HEADINGS
+       ================================================= */
 
     text =
       text.replace(
@@ -598,7 +617,9 @@
       );
 
 
-    /* LISTS */
+    /* =================================================
+       UNORDERED LISTS
+       ================================================= */
 
     text =
       text.replace(
@@ -646,17 +667,22 @@
           return html;
 
         }
+
       );
 
 
-    /* PARAGRAPHS */
+    /* =================================================
+       PARAGRAPHS
+       ================================================= */
 
     const blocks =
       text
         .split(/\n\s*\n/)
         .map(
           function (block) {
+
             return block.trim();
+
           }
         )
         .filter(Boolean);
@@ -694,7 +720,9 @@
         .join("\n");
 
 
-    /* RESTORE SPECIAL ELEMENTS */
+    /* =================================================
+       RESTORE IMAGES / LINKS
+       ================================================= */
 
     special.forEach(
       function (value, index) {
@@ -770,13 +798,9 @@
       '</p>' +
 
       '<a' +
-
       ' class="btn btn-light"' +
-
       ' href="' +
-
       articleUrl(article.slug) +
-
       '">' +
 
       'Διαβάστε την είδηση →' +
@@ -807,15 +831,10 @@
       '<article class="news-article">' +
 
       '<div' +
-
       ' class="news-cover"' +
-
       ' style="background-image:url(\'' +
-
       escapeHtml(image) +
-
       '\')">' +
-
       '</div>' +
 
       '<div class="news-copy">' +
@@ -847,13 +866,9 @@
       '</p>' +
 
       '<a' +
-
       ' class="more"' +
-
       ' href="' +
-
       articleUrl(article.slug) +
-
       '">' +
 
       'Διαβάστε περισσότερα →' +
@@ -892,15 +907,10 @@
       '<article class="news-article">' +
 
       '<div' +
-
       ' class="news-cover"' +
-
       ' style="background-image:url(\'' +
-
       escapeHtml(image) +
-
       '\')">' +
-
       '</div>' +
 
       '<div class="news-copy">' +
@@ -932,13 +942,9 @@
       '</p>' +
 
       '<a' +
-
       ' class="outline-link"' +
-
       ' href="' +
-
       articleUrl(article.slug) +
-
       '">' +
 
       'Διαβάστε περισσότερα →' +
@@ -977,8 +983,11 @@
         "<p>Δεν υπάρχουν διαθέσιμα νέα.</p>";
 
       return;
+
     }
 
+
+    /* Νεότερα άρθρα πρώτα */
 
     articles =
       articles
@@ -1134,16 +1143,12 @@
     container.innerHTML =
 
       '<article' +
-
       ' class="news-single"' +
-
       ' style="max-width:900px;margin:0 auto;">' +
 
 
       '<a' +
-
       ' class="more"' +
-
       ' href="/news/">' +
 
       '← Επιστροφή στα νέα' +
@@ -1156,35 +1161,22 @@
           ? (
 
             '<div' +
-
             ' style="' +
-
             'margin-top:24px;' +
-
             'width:100%;' +
-
             'height:420px;' +
-
             'border-radius:24px;' +
-
             'background-image:url(\'' +
-
             escapeHtml(image) +
-
             '\');' +
-
             'background-size:cover;' +
-
             'background-position:center;' +
-
             '">' +
 
             '</div>'
 
           )
-
           : ""
-
       ) +
 
 
@@ -1206,11 +1198,11 @@
       '</span>' +
 
 
-      <!-- =================================================
-           ΠΛΗΡΗΣ ΤΙΤΛΟΣ ΑΡΘΡΟΥ
-           Δεν επιτρέπουμε line-clamp / overflow από CSS.
-           ================================================= -->
-
+      /*
+       * Πλήρης τίτλος άρθρου.
+       * Παρακάμπτουμε τυχόν line-clamp
+       * που μπορεί να υπάρχει στο style.css.
+       */
 
       '<h2' +
 
@@ -1249,7 +1241,6 @@
 
       (
         article.excerpt
-
           ? (
 
             '<p' +
@@ -1273,9 +1264,7 @@
             '</p>'
 
           )
-
           : ""
-
       ) +
 
 
