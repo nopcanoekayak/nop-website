@@ -43,19 +43,11 @@
   <nav class="nav" aria-label="Κύρια πλοήγηση">
 
     <a href="/">Αρχική</a>
-
     <a href="/club">Ο Όμιλος</a>
-
     <a href="/canoe-kayak">Κανόε Καγιάκ</a>
-
-    <a href="/sup">
-      Όρθια Σανιδοκωπηλασία / SUP
-    </a>
-
+    <a href="/sup">Όρθια Σανιδοκωπηλασία / SUP</a>
     <a href="/coach">Προπονητής</a>
-
     <a href="/results">Αποτελέσματα</a>
-
     <a href="/news/">Νέα</a>
 
     <a
@@ -73,10 +65,6 @@
 
 
 <main>
-
-  <!-- =====================================================
-       HERO
-       ===================================================== -->
 
   <section class="page-hero">
 
@@ -100,10 +88,6 @@
   </section>
 
 
-  <!-- =====================================================
-       DYNAMIC NEWS
-       ===================================================== -->
-
   <section class="section">
 
     <div id="dynamic-news">
@@ -114,10 +98,6 @@
 
     </div>
 
-
-    <!-- ===================================================
-         PHOTO ARCHIVE
-         =================================================== -->
 
     <div
       class="section-heading"
@@ -189,14 +169,9 @@
 </main>
 
 
-<!-- =======================================================
-     FOOTER
-     ======================================================= -->
-
 <footer>
 
   <div class="footer-grid">
-
 
     <div class="footer-brand">
 
@@ -219,26 +194,18 @@
 
     <div>
 
-      <h4>
-        Ο Όμιλος
-      </h4>
+      <h4>Ο Όμιλος</h4>
 
-      <a href="/club">
-        Ο Όμιλος
-      </a>
+      <a href="/club">Ο Όμιλος</a>
 
-      <a href="/club">
-        Ιστορία
-      </a>
+      <a href="/club">Ιστορία</a>
 
     </div>
 
 
     <div>
 
-      <h4>
-        Αθλητισμός
-      </h4>
+      <h4>Αθλητισμός</h4>
 
       <a href="/canoe-kayak">
         Κανόε Καγιάκ
@@ -269,9 +236,7 @@
 
     <div>
 
-      <h4>
-        Επικοινωνία
-      </h4>
+      <h4>Επικοινωνία</h4>
 
       <a href="/contact">
         Επικοινωνία
@@ -326,9 +291,9 @@
   }
 
 
-  /* ======================================================
-     HTML ESCAPE
-     ====================================================== */
+  /* =====================================================
+     BASIC HTML ESCAPE
+     ===================================================== */
 
   function escapeHtml(value) {
 
@@ -344,14 +309,15 @@
   }
 
 
-  /* ======================================================
+  /* =====================================================
      SAFE URL
-     ====================================================== */
+     ===================================================== */
 
   function safeUrl(value) {
 
     const url =
       String(value || "").trim();
+
 
     if (
       url.startsWith("/") ||
@@ -360,16 +326,19 @@
       url.startsWith("https://") ||
       url.startsWith("http://")
     ) {
+
       return url;
+
     }
+
 
     return "";
   }
 
 
-  /* ======================================================
+  /* =====================================================
      DATE
-     ====================================================== */
+     ===================================================== */
 
   function formatDate(value) {
 
@@ -377,16 +346,21 @@
       return "";
     }
 
+
     const date =
       new Date(value);
+
 
     if (
       Number.isNaN(
         date.getTime()
       )
     ) {
+
       return String(value);
+
     }
+
 
     return date.toLocaleDateString(
       "el-GR",
@@ -399,9 +373,9 @@
   }
 
 
-  /* ======================================================
+  /* =====================================================
      ARTICLE URL
-     ====================================================== */
+     ===================================================== */
 
   function articleUrl(slug) {
 
@@ -414,32 +388,45 @@
   }
 
 
-  /* ======================================================
+  /* =====================================================
      MARKDOWN → HTML
-     ====================================================== */
+     ===================================================== */
 
   function markdownToHtml(markdown) {
 
     let text =
-      String(
-        markdown || ""
-      );
+      String(markdown || "");
 
 
-    /* ----------------------------------------------
-       Escape HTML first
-       ---------------------------------------------- */
+    /*
+     * IMPORTANT:
+     *
+     * Τα images και τα links πρέπει να
+     * αναγνωριστούν ΠΡΙΝ γίνει HTML escaping.
+     *
+     * Χρησιμοποιούμε placeholders ώστε το
+     * υπόλοιπο κείμενο να παραμένει ασφαλές.
+     */
 
-    text =
-      escapeHtml(text);
+
+    const special = [];
+
+    function store(html) {
+
+      const index =
+        special.length;
+
+      special.push(html);
+
+      return "___SPECIAL_TOKEN_" +
+        index +
+        "___";
+    }
 
 
-    /* ----------------------------------------------
-       Markdown images
-       
-       Example:
-       ![](/image.jpg "title")
-       ---------------------------------------------- */
+    /* =================================================
+       IMAGES
+       ================================================= */
 
     text =
       text.replace(
@@ -454,12 +441,15 @@
           const safe =
             safeUrl(url);
 
+
           if (!safe) {
-            return "";
+            return match;
           }
 
+
           const safeAlt =
-            escapeHtml(alt);
+            escapeHtml(alt || "");
+
 
           const safeTitle =
             title
@@ -468,36 +458,46 @@
                 '"'
               : "";
 
-          return (
+
+          let imageHtml =
             '<figure class="news-body-image">' +
 
-            '<img src="' +
+            '<img' +
+            ' src="' +
             escapeHtml(safe) +
-            '" alt="' +
+            '"' +
+            ' alt="' +
             safeAlt +
             '"' +
             safeTitle +
-            ' loading="lazy">' +
+            ' loading="lazy">' ;
 
-            (
-              title
-                ? '<figcaption>' +
-                  escapeHtml(title) +
-                  '</figcaption>'
-                : ""
-            ) +
 
-            '</figure>'
+          if (title) {
+
+            imageHtml +=
+              '<figcaption>' +
+              escapeHtml(title) +
+              '</figcaption>';
+
+          }
+
+
+          imageHtml +=
+            '</figure>';
+
+
+          return store(
+            imageHtml
           );
+
         }
       );
 
 
-    /* ----------------------------------------------
-       Markdown links
-       
-       [κείμενο](url)
-       ---------------------------------------------- */
+    /* =================================================
+       LINKS
+       ================================================= */
 
     text =
       text.replace(
@@ -511,26 +511,39 @@
           const safe =
             safeUrl(url);
 
+
           if (!safe) {
-            return escapeHtml(label);
+            return match;
           }
 
-          return (
-            '<a href="' +
+
+          return store(
+            '<a' +
+            ' href="' +
             escapeHtml(safe) +
-            '" target="_blank" rel="noopener noreferrer">' +
-            label +
+            '"' +
+            ' target="_blank"' +
+            ' rel="noopener noreferrer"' +
+            '>' +
+            escapeHtml(label) +
             '</a>'
           );
+
         }
       );
 
 
-    /* ----------------------------------------------
-       Bold
-       
-       **κείμενο**
-       ---------------------------------------------- */
+    /* =================================================
+       NOW ESCAPE THE REST OF THE TEXT
+       ================================================= */
+
+    text =
+      escapeHtml(text);
+
+
+    /* =================================================
+       BOLD
+       ================================================= */
 
     text =
       text.replace(
@@ -539,11 +552,9 @@
       );
 
 
-    /* ----------------------------------------------
-       Italic
-       
-       *κείμενο*
-       ---------------------------------------------- */
+    /* =================================================
+       ITALIC
+       ================================================= */
 
     text =
       text.replace(
@@ -552,12 +563,9 @@
       );
 
 
-    /* ----------------------------------------------
-       Headings
-       
-       # Τίτλος
-       ## Τίτλος
-       ---------------------------------------------- */
+    /* =================================================
+       HEADINGS
+       ================================================= */
 
     text =
       text.replace(
@@ -565,11 +573,13 @@
         "<h4>$1</h4>"
       );
 
+
     text =
       text.replace(
         /^## (.+)$/gm,
         "<h3>$1</h3>"
       );
+
 
     text =
       text.replace(
@@ -578,9 +588,9 @@
       );
 
 
-    /* ----------------------------------------------
-       Unordered lists
-       ---------------------------------------------- */
+    /* =================================================
+       UNORDERED LISTS
+       ================================================= */
 
     text =
       text.replace(
@@ -592,18 +602,20 @@
               .trim()
               .split(/\n/);
 
+
           let html =
             "<ul>";
+
 
           lines.forEach(
             function (line) {
 
               const item =
-                line
-                  .replace(
-                    /^[-*]\s+/,
-                    ""
-                  );
+                line.replace(
+                  /^[-*]\s+/,
+                  ""
+                );
+
 
               if (item) {
 
@@ -611,36 +623,42 @@
                   "<li>" +
                   item +
                   "</li>";
+
               }
 
             }
           );
 
+
           html +=
             "</ul>";
 
+
           return html;
+
         }
       );
 
 
-    /* ----------------------------------------------
-       Paragraphs / line breaks
-       ---------------------------------------------- */
+    /* =================================================
+       PARAGRAPHS
+       ================================================= */
 
     const blocks =
       text
         .split(/\n\s*\n/)
         .map(
           function (block) {
+
             return block.trim();
+
           }
         )
         .filter(Boolean);
 
 
-    return blocks
-      .map(
+    let html =
+      blocks.map(
         function (block) {
 
           if (
@@ -650,86 +668,98 @@
             block.startsWith("<h4") ||
             block.startsWith("<ul")
           ) {
+
             return block;
+
           }
+
 
           return (
             "<p>" +
+
             block.replace(
               /\n/g,
               "<br>"
             ) +
+
             "</p>"
           );
+
         }
-      )
-      .join("\n");
+      ).join("\n");
+
+
+    /* =================================================
+       RESTORE SPECIAL HTML
+       ================================================= */
+
+    special.forEach(
+      function (value, index) {
+
+        const token =
+          "___SPECIAL_TOKEN_" +
+          index +
+          "___";
+
+
+        html =
+          html.split(token).join(value);
+
+      }
+    );
+
+
+    return html;
+
   }
 
 
-  /* ======================================================
+  /* =====================================================
      FEATURE CARD
-     ====================================================== */
+     ===================================================== */
 
   function featureCard(article) {
 
     const image =
       safeUrl(article.image);
 
+
     return (
 
       '<article' +
-
       ' class="news-feature-card"' +
-
       ' style="background-image:url(\'' +
-
       escapeHtml(image) +
-
       '\')">' +
 
       '<div class="news-feature-content">' +
 
       '<span class="date">' +
-
       escapeHtml(
         formatDate(article.date)
       ) +
-
       ' • ' +
-
       escapeHtml(
         article.category || "Νέα"
       ) +
-
       '</span>' +
 
       '<h2>' +
-
       escapeHtml(
         article.title || "Χωρίς τίτλο"
       ) +
-
       '</h2>' +
 
       '<p>' +
-
       escapeHtml(
         article.excerpt || ""
       ) +
-
       '</p>' +
 
       '<a' +
-
       ' class="btn btn-light"' +
-
       ' href="' +
-
-      articleUrl(
-        article.slug
-      ) +
-
+      articleUrl(article.slug) +
       '">' +
 
       'Διαβάστε την είδηση →' +
@@ -739,73 +769,58 @@
       '</div>' +
 
       '</article>'
+
     );
   }
 
 
-  /* ======================================================
+  /* =====================================================
      SIDE CARD
-     ====================================================== */
+     ===================================================== */
 
   function sideCard(article) {
 
     const image =
       safeUrl(article.image);
 
+
     return (
 
       '<article class="news-article">' +
 
       '<div' +
-
       ' class="news-cover"' +
-
       ' style="background-image:url(\'' +
-
       escapeHtml(image) +
-
       '\')">' +
-
       '</div>' +
 
       '<div class="news-copy">' +
 
       '<span class="date">' +
-
       escapeHtml(
         formatDate(article.date) ||
         article.category ||
         "Νέα"
       ) +
-
       '</span>' +
 
       '<h3>' +
-
       escapeHtml(
         article.title || "Χωρίς τίτλο"
       ) +
-
       '</h3>' +
 
       '<p>' +
-
       escapeHtml(
         article.excerpt || ""
       ) +
-
       '</p>' +
 
       '<a' +
-
       ' class="more"' +
-
       ' href="' +
-
-      articleUrl(
-        article.slug
-      ) +
-
+      articleUrl(article.slug) +
       '">' +
 
       'Διαβάστε περισσότερα →' +
@@ -813,83 +828,66 @@
       '</a>' +
 
       '<span class="tag">' +
-
       escapeHtml(
         article.category || "Νέα"
       ) +
-
       '</span>' +
 
       '</div>' +
 
       '</article>'
+
     );
   }
 
 
-  /* ======================================================
-     NORMAL LIST CARD
-     ====================================================== */
+  /* =====================================================
+     LIST CARD
+     ===================================================== */
 
   function listCard(article) {
 
     const image =
       safeUrl(article.image);
 
+
     return (
 
       '<article class="news-article">' +
 
       '<div' +
-
       ' class="news-cover"' +
-
       ' style="background-image:url(\'' +
-
       escapeHtml(image) +
-
       '\')">' +
-
       '</div>' +
 
       '<div class="news-copy">' +
 
       '<span class="date">' +
-
       escapeHtml(
         formatDate(article.date) ||
         article.category ||
         "Νέα"
       ) +
-
       '</span>' +
 
       '<h3>' +
-
       escapeHtml(
         article.title || "Χωρίς τίτλο"
       ) +
-
       '</h3>' +
 
       '<p>' +
-
       escapeHtml(
         article.excerpt || ""
       ) +
-
       '</p>' +
 
       '<a' +
-
       ' class="outline-link"' +
-
       ' href="' +
-
-      articleUrl(
-        article.slug
-      ) +
-
+      articleUrl(article.slug) +
       '">' +
 
       'Διαβάστε περισσότερα →' +
@@ -897,23 +895,22 @@
       '</a>' +
 
       '<span class="tag">' +
-
       escapeHtml(
         article.category || "Νέα"
       ) +
-
       '</span>' +
 
       '</div>' +
 
       '</article>'
+
     );
   }
 
 
-  /* ======================================================
-     RENDER NEWS LIST
-     ====================================================== */
+  /* =====================================================
+     RENDER NEWS
+     ===================================================== */
 
   function renderNews(articles) {
 
@@ -929,41 +926,42 @@
     }
 
 
-    /*
-     * Τα άρθρα από το CMS έρχονται ήδη με τη σειρά
-     * που δημιουργήθηκαν στο news-data.json.
-     *
-     * Ταξινομούμε επιπλέον με βάση την ημερομηνία,
-     * από το νεότερο προς το παλαιότερο.
-     */
-
     articles =
-      articles.slice().sort(
-        function (a, b) {
+      articles
+        .slice()
+        .sort(
+          function (a, b) {
 
-          const da =
-            new Date(a.date).getTime();
+            const da =
+              new Date(a.date).getTime();
 
-          const db =
-            new Date(b.date).getTime();
+            const db =
+              new Date(b.date).getTime();
 
-          if (
-            Number.isNaN(da) ||
-            Number.isNaN(db)
-          ) {
-            return 0;
+
+            if (
+              Number.isNaN(da) ||
+              Number.isNaN(db)
+            ) {
+
+              return 0;
+
+            }
+
+
+            return db - da;
+
           }
-
-          return db - da;
-        }
-      );
+        );
 
 
     const feature =
       articles[0];
 
+
     const side =
       articles.slice(1, 3);
+
 
     const rest =
       articles.slice(3);
@@ -1021,11 +1019,6 @@
       html;
 
 
-    /*
-     * Εάν το URL περιέχει ?article=...
-     * εμφανίζουμε το συγκεκριμένο άρθρο.
-     */
-
     const requestedSlug =
       new URLSearchParams(
         window.location.search
@@ -1040,12 +1033,13 @@
       );
 
     }
+
   }
 
 
-  /* ======================================================
+  /* =====================================================
      SINGLE ARTICLE
-     ====================================================== */
+     ===================================================== */
 
   function showSingleArticle(
     articles,
@@ -1069,19 +1063,13 @@
     if (!article) {
 
       return;
+
     }
 
 
     const image =
       safeUrl(article.image);
 
-
-    /*
-     * Εδώ είναι η βασική διόρθωση:
-     * το body περνάει από markdownToHtml()
-     * και επομένως οι εικόνες / έντονα / links
-     * εμφανίζονται κανονικά.
-     */
 
     const bodyHtml =
       markdownToHtml(
@@ -1092,16 +1080,12 @@
     container.innerHTML =
 
       '<article' +
-
       ' class="news-single"' +
-
       ' style="max-width:900px;margin:0 auto;">' +
 
 
       '<a' +
-
       ' class="more"' +
-
       ' href="/news/">' +
 
       '← Επιστροφή στα νέα' +
@@ -1113,34 +1097,22 @@
         image
           ? (
 
-              '<div' +
+            '<div' +
+            ' style="' +
+            'margin-top:24px;' +
+            'width:100%;' +
+            'height:420px;' +
+            'border-radius:24px;' +
+            'background-image:url(\'' +
+            escapeHtml(image) +
+            '\');' +
+            'background-size:cover;' +
+            'background-position:center;' +
+            '">' +
 
-              ' style="' +
+            '</div>'
 
-              'margin-top:24px;' +
-
-              'width:100%;' +
-
-              'height:420px;' +
-
-              'border-radius:24px;' +
-
-              'background-image:url(\'' +
-
-              escapeHtml(image) +
-
-              '\');' +
-
-              'background-size:cover;' +
-
-              'background-position:center;' +
-
-              '">' +
-
-              '</div>'
-
-            )
-
+          )
           : ""
       ) +
 
@@ -1164,15 +1136,10 @@
 
 
       '<h2' +
-
       ' style="' +
-
       'margin-top:12px;' +
-
       'font-size:clamp(2rem,4vw,3.5rem);' +
-
       'line-height:1.1;' +
-
       '">' +
 
       escapeHtml(
@@ -1186,44 +1153,31 @@
         article.excerpt
           ? (
 
-              '<p' +
+            '<p' +
+            ' style="' +
+            'margin-top:18px;' +
+            'font-size:1.15rem;' +
+            'line-height:1.8;' +
+            'font-weight:500;' +
+            '">' +
 
-              ' style="' +
+            escapeHtml(
+              article.excerpt
+            ) +
 
-              'margin-top:18px;' +
+            '</p>'
 
-              'font-size:1.15rem;' +
-
-              'line-height:1.8;' +
-
-              'font-weight:500;' +
-
-              '">' +
-
-              escapeHtml(
-                article.excerpt
-              ) +
-
-              '</p>'
-
-            )
-
+          )
           : ""
       ) +
 
 
       '<div' +
-
       ' class="news-body"' +
-
       ' style="' +
-
       'margin-top:28px;' +
-
       'font-size:1.08rem;' +
-
       'line-height:1.85;' +
-
       '">' +
 
       bodyHtml +
@@ -1235,12 +1189,13 @@
 
 
       '</article>';
+
   }
 
 
-  /* ======================================================
+  /* =====================================================
      LOAD NEWS DATA
-     ====================================================== */
+     ===================================================== */
 
   fetch(
     "/news-data.json?ts=" +
@@ -1250,45 +1205,49 @@
     }
   )
 
-    .then(
-      function (response) {
+  .then(
+    function (response) {
 
-        if (!response.ok) {
+      if (!response.ok) {
 
-          throw new Error(
-            "news-data.json HTTP " +
-            response.status
-          );
-        }
-
-        return response.json();
-      }
-    )
-
-    .then(
-      function (articles) {
-
-        renderNews(
-          articles
-        );
-      }
-    )
-
-    .catch(
-      function (error) {
-
-        console.error(
-          "News CMS error:",
-          error
+        throw new Error(
+          "news-data.json HTTP " +
+          response.status
         );
 
-        container.innerHTML =
-
-          "<p>" +
-          "Δεν ήταν δυνατή η φόρτωση των νέων." +
-          "</p>";
       }
-    );
+
+      return response.json();
+
+    }
+  )
+
+  .then(
+    function (articles) {
+
+      renderNews(
+        articles
+      );
+
+    }
+  )
+
+  .catch(
+    function (error) {
+
+      console.error(
+        "News CMS error:",
+        error
+      );
+
+
+      container.innerHTML =
+        "<p>" +
+        "Δεν ήταν δυνατή η φόρτωση των νέων." +
+        "</p>";
+
+    }
+  );
 
 
 })();
