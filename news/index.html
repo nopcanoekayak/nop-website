@@ -45,7 +45,11 @@
     <a href="/">Αρχική</a>
     <a href="/club">Ο Όμιλος</a>
     <a href="/canoe-kayak">Κανόε Καγιάκ</a>
-    <a href="/sup">Όρθια Σανιδοκωπηλασία / SUP</a>
+
+    <a href="/sup">
+      Όρθια Σανιδοκωπηλασία / SUP
+    </a>
+
     <a href="/coach">Προπονητής</a>
     <a href="/results">Αποτελέσματα</a>
     <a href="/news/">Νέα</a>
@@ -65,6 +69,8 @@
 
 
 <main>
+
+  <!-- HERO -->
 
   <section class="page-hero">
 
@@ -88,6 +94,8 @@
   </section>
 
 
+  <!-- DYNAMIC NEWS -->
+
   <section class="section">
 
     <div id="dynamic-news">
@@ -98,6 +106,8 @@
 
     </div>
 
+
+    <!-- PHOTO ARCHIVE -->
 
     <div
       class="section-heading"
@@ -169,6 +179,8 @@
 </main>
 
 
+<!-- FOOTER -->
+
 <footer>
 
   <div class="footer-grid">
@@ -194,18 +206,26 @@
 
     <div>
 
-      <h4>Ο Όμιλος</h4>
+      <h4>
+        Ο Όμιλος
+      </h4>
 
-      <a href="/club">Ο Όμιλος</a>
+      <a href="/club">
+        Ο Όμιλος
+      </a>
 
-      <a href="/club">Ιστορία</a>
+      <a href="/club">
+        Ιστορία
+      </a>
 
     </div>
 
 
     <div>
 
-      <h4>Αθλητισμός</h4>
+      <h4>
+        Αθλητισμός
+      </h4>
 
       <a href="/canoe-kayak">
         Κανόε Καγιάκ
@@ -236,7 +256,9 @@
 
     <div>
 
-      <h4>Επικοινωνία</h4>
+      <h4>
+        Επικοινωνία
+      </h4>
 
       <a href="/contact">
         Επικοινωνία
@@ -292,7 +314,7 @@
 
 
   /* =====================================================
-     BASIC HTML ESCAPE
+     HTML ESCAPE
      ===================================================== */
 
   function escapeHtml(value) {
@@ -398,18 +420,8 @@
       String(markdown || "");
 
 
-    /*
-     * IMPORTANT:
-     *
-     * Τα images και τα links πρέπει να
-     * αναγνωριστούν ΠΡΙΝ γίνει HTML escaping.
-     *
-     * Χρησιμοποιούμε placeholders ώστε το
-     * υπόλοιπο κείμενο να παραμένει ασφαλές.
-     */
-
-
     const special = [];
+
 
     function store(html) {
 
@@ -418,19 +430,21 @@
 
       special.push(html);
 
-      return "___SPECIAL_TOKEN_" +
+      return (
+        "___SPECIAL_TOKEN_" +
         index +
-        "___";
+        "___"
+      );
+
     }
 
 
-    /* =================================================
-       IMAGES
-       ================================================= */
+    /* IMAGES */
 
     text =
       text.replace(
         /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g,
+
         function (
           match,
           alt,
@@ -460,6 +474,7 @@
 
 
           let imageHtml =
+
             '<figure class="news-body-image">' +
 
             '<img' +
@@ -470,7 +485,7 @@
             safeAlt +
             '"' +
             safeTitle +
-            ' loading="lazy">' ;
+            ' loading="lazy">';
 
 
           if (title) {
@@ -495,13 +510,12 @@
       );
 
 
-    /* =================================================
-       LINKS
-       ================================================= */
+    /* LINKS */
 
     text =
       text.replace(
         /\[([^\]]+)\]\(([^)\s]+)\)/g,
+
         function (
           match,
           label,
@@ -518,6 +532,7 @@
 
 
           return store(
+
             '<a' +
             ' href="' +
             escapeHtml(safe) +
@@ -525,25 +540,24 @@
             ' target="_blank"' +
             ' rel="noopener noreferrer"' +
             '>' +
+
             escapeHtml(label) +
+
             '</a>'
+
           );
 
         }
       );
 
 
-    /* =================================================
-       NOW ESCAPE THE REST OF THE TEXT
-       ================================================= */
+    /* ESCAPE REMAINING TEXT */
 
     text =
       escapeHtml(text);
 
 
-    /* =================================================
-       BOLD
-       ================================================= */
+    /* BOLD */
 
     text =
       text.replace(
@@ -552,9 +566,7 @@
       );
 
 
-    /* =================================================
-       ITALIC
-       ================================================= */
+    /* ITALIC */
 
     text =
       text.replace(
@@ -563,9 +575,7 @@
       );
 
 
-    /* =================================================
-       HEADINGS
-       ================================================= */
+    /* HEADINGS */
 
     text =
       text.replace(
@@ -588,13 +598,12 @@
       );
 
 
-    /* =================================================
-       UNORDERED LISTS
-       ================================================= */
+    /* LISTS */
 
     text =
       text.replace(
         /(?:^|\n)(?:[-*] .+(?:\n|$))+/g,
+
         function (block) {
 
           const lines =
@@ -640,58 +649,52 @@
       );
 
 
-    /* =================================================
-       PARAGRAPHS
-       ================================================= */
+    /* PARAGRAPHS */
 
     const blocks =
       text
         .split(/\n\s*\n/)
         .map(
           function (block) {
-
             return block.trim();
-
           }
         )
         .filter(Boolean);
 
 
     let html =
-      blocks.map(
-        function (block) {
+      blocks
+        .map(
+          function (block) {
 
-          if (
-            block.startsWith("<figure") ||
-            block.startsWith("<h2") ||
-            block.startsWith("<h3") ||
-            block.startsWith("<h4") ||
-            block.startsWith("<ul")
-          ) {
+            if (
+              block.startsWith("<figure") ||
+              block.startsWith("<h2") ||
+              block.startsWith("<h3") ||
+              block.startsWith("<h4") ||
+              block.startsWith("<ul")
+            ) {
 
-            return block;
+              return block;
+
+            }
+
+
+            return (
+              "<p>" +
+              block.replace(
+                /\n/g,
+                "<br>"
+              ) +
+              "</p>"
+            );
 
           }
+        )
+        .join("\n");
 
 
-          return (
-            "<p>" +
-
-            block.replace(
-              /\n/g,
-              "<br>"
-            ) +
-
-            "</p>"
-          );
-
-        }
-      ).join("\n");
-
-
-    /* =================================================
-       RESTORE SPECIAL HTML
-       ================================================= */
+    /* RESTORE SPECIAL ELEMENTS */
 
     special.forEach(
       function (value, index) {
@@ -703,7 +706,9 @@
 
 
         html =
-          html.split(token).join(value);
+          html
+            .split(token)
+            .join(value);
 
       }
     );
@@ -735,31 +740,43 @@
       '<div class="news-feature-content">' +
 
       '<span class="date">' +
+
       escapeHtml(
         formatDate(article.date)
       ) +
+
       ' • ' +
+
       escapeHtml(
         article.category || "Νέα"
       ) +
+
       '</span>' +
 
       '<h2>' +
+
       escapeHtml(
         article.title || "Χωρίς τίτλο"
       ) +
+
       '</h2>' +
 
       '<p>' +
+
       escapeHtml(
         article.excerpt || ""
       ) +
+
       '</p>' +
 
       '<a' +
+
       ' class="btn btn-light"' +
+
       ' href="' +
+
       articleUrl(article.slug) +
+
       '">' +
 
       'Διαβάστε την είδηση →' +
@@ -771,6 +788,7 @@
       '</article>'
 
     );
+
   }
 
 
@@ -789,38 +807,53 @@
       '<article class="news-article">' +
 
       '<div' +
+
       ' class="news-cover"' +
+
       ' style="background-image:url(\'' +
+
       escapeHtml(image) +
+
       '\')">' +
+
       '</div>' +
 
       '<div class="news-copy">' +
 
       '<span class="date">' +
+
       escapeHtml(
         formatDate(article.date) ||
         article.category ||
         "Νέα"
       ) +
+
       '</span>' +
 
       '<h3>' +
+
       escapeHtml(
         article.title || "Χωρίς τίτλο"
       ) +
+
       '</h3>' +
 
       '<p>' +
+
       escapeHtml(
         article.excerpt || ""
       ) +
+
       '</p>' +
 
       '<a' +
+
       ' class="more"' +
+
       ' href="' +
+
       articleUrl(article.slug) +
+
       '">' +
 
       'Διαβάστε περισσότερα →' +
@@ -828,9 +861,11 @@
       '</a>' +
 
       '<span class="tag">' +
+
       escapeHtml(
         article.category || "Νέα"
       ) +
+
       '</span>' +
 
       '</div>' +
@@ -838,6 +873,7 @@
       '</article>'
 
     );
+
   }
 
 
@@ -856,38 +892,53 @@
       '<article class="news-article">' +
 
       '<div' +
+
       ' class="news-cover"' +
+
       ' style="background-image:url(\'' +
+
       escapeHtml(image) +
+
       '\')">' +
+
       '</div>' +
 
       '<div class="news-copy">' +
 
       '<span class="date">' +
+
       escapeHtml(
         formatDate(article.date) ||
         article.category ||
         "Νέα"
       ) +
+
       '</span>' +
 
       '<h3>' +
+
       escapeHtml(
         article.title || "Χωρίς τίτλο"
       ) +
+
       '</h3>' +
 
       '<p>' +
+
       escapeHtml(
         article.excerpt || ""
       ) +
+
       '</p>' +
 
       '<a' +
+
       ' class="outline-link"' +
+
       ' href="' +
+
       articleUrl(article.slug) +
+
       '">' +
 
       'Διαβάστε περισσότερα →' +
@@ -895,9 +946,11 @@
       '</a>' +
 
       '<span class="tag">' +
+
       escapeHtml(
         article.category || "Νέα"
       ) +
+
       '</span>' +
 
       '</div>' +
@@ -905,6 +958,7 @@
       '</article>'
 
     );
+
   }
 
 
@@ -1080,12 +1134,16 @@
     container.innerHTML =
 
       '<article' +
+
       ' class="news-single"' +
+
       ' style="max-width:900px;margin:0 auto;">' +
 
 
       '<a' +
+
       ' class="more"' +
+
       ' href="/news/">' +
 
       '← Επιστροφή στα νέα' +
@@ -1098,22 +1156,35 @@
           ? (
 
             '<div' +
+
             ' style="' +
+
             'margin-top:24px;' +
+
             'width:100%;' +
+
             'height:420px;' +
+
             'border-radius:24px;' +
+
             'background-image:url(\'' +
+
             escapeHtml(image) +
+
             '\');' +
+
             'background-size:cover;' +
+
             'background-position:center;' +
+
             '">' +
 
             '</div>'
 
           )
+
           : ""
+
       ) +
 
 
@@ -1135,11 +1206,38 @@
       '</span>' +
 
 
+      <!-- =================================================
+           ΠΛΗΡΗΣ ΤΙΤΛΟΣ ΑΡΘΡΟΥ
+           Δεν επιτρέπουμε line-clamp / overflow από CSS.
+           ================================================= -->
+
+
       '<h2' +
+
       ' style="' +
+
       'margin-top:12px;' +
+
       'font-size:clamp(2rem,4vw,3.5rem);' +
+
       'line-height:1.1;' +
+
+      'display:block!important;' +
+
+      'white-space:normal!important;' +
+
+      'overflow:visible!important;' +
+
+      'text-overflow:clip!important;' +
+
+      '-webkit-line-clamp:unset!important;' +
+
+      '-webkit-box-orient:unset!important;' +
+
+      'max-height:none!important;' +
+
+      'height:auto!important;' +
+
       '">' +
 
       escapeHtml(
@@ -1151,14 +1249,21 @@
 
       (
         article.excerpt
+
           ? (
 
             '<p' +
+
             ' style="' +
+
             'margin-top:18px;' +
+
             'font-size:1.15rem;' +
+
             'line-height:1.8;' +
+
             'font-weight:500;' +
+
             '">' +
 
             escapeHtml(
@@ -1168,16 +1273,24 @@
             '</p>'
 
           )
+
           : ""
+
       ) +
 
 
       '<div' +
+
       ' class="news-body"' +
+
       ' style="' +
+
       'margin-top:28px;' +
+
       'font-size:1.08rem;' +
+
       'line-height:1.85;' +
+
       '">' +
 
       bodyHtml +
@@ -1242,6 +1355,7 @@
 
 
       container.innerHTML =
+
         "<p>" +
         "Δεν ήταν δυνατή η φόρτωση των νέων." +
         "</p>";
