@@ -1,0 +1,48 @@
+backend:
+  name: github
+  repo: nopcanoekayak/nop-website
+  branch: main
+
+media_folder: "content/news/uploads"
+public_folder: "/content/news/uploads"
+
+collections:
+  - name: "news"
+    label: "Νέα / Ανακοινώσεις"
+    label_singular: "Νέα"
+    folder: "content/news"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+
+    fields:
+      - label: "Τίτλος"
+        name: "title"
+        widget: "string"
+
+      - label: "Ημερομηνία"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD HH:mm"
+
+      - label: "Κατηγορία"
+        name: "category"
+        widget: "select"
+        options:
+          - "Νέα"
+          - "Ανακοίνωση"
+          - "Αγωνιστικά"
+          - "Διακρίσεις"
+
+      - label: "Κεντρική φωτογραφία"
+        name: "image"
+        widget: "image"
+        required: false
+
+      - label: "Σύντομη περιγραφή"
+        name: "excerpt"
+        widget: "text"
+        required: false
+
+      - label: "Κείμενο"
+        name: "body"
+        widget: "markdown"
